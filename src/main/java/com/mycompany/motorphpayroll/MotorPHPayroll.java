@@ -180,7 +180,7 @@ public class MotorPHPayroll {
         double netHours2 = h2 - l2;
 
         System.out.println("\nPAYROLL FOR " + monthName + " | " + name + " (" + id + ")");
-        System.out.println("[1ST CUT-OFF] Total Hours: " + h1 + " | Late: " + l1 + " | Net: " + (netHours1 * rate));
+        System.out.println("[1ST CUT-OFF] Total Hours: " + h1 + " | Late: " + l1 + " | Net payout: " + (netHours1 * rate));
         System.out.println("[2ND CUT-OFF] Total Hours: " + h2 + " | Late: " + l2 + " | Deductions: SSS=" + sss + ", Phil-health=" + ph + ", Pag-ibig=" + pi + ", Tax=" + tax);
         System.out.println("  Net Payout: " + ((netHours2 * rate) - (sss + ph + pi + tax)));
     }
