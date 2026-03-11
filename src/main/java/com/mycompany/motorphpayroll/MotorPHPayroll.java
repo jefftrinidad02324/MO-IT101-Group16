@@ -83,7 +83,7 @@ public class MotorPHPayroll {
             BufferedReader br1 = new BufferedReader(new FileReader(detailsFile));
             String line = br1.readLine();
             while ((line = br1.readLine()) != null) {
-                String[] d = manualSplit(line);
+                String[] d = manualSplit(line);//We use the manualSplit, beacause we encounter errors on using the .split(",").
                 if (d[0].trim().equals(empId.trim())) {
                     name = d[2] + " " + d[1];
                     basic = Double.parseDouble(d[13].replace("\"", "").replace(",", ""));
