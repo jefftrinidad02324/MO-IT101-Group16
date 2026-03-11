@@ -61,7 +61,7 @@ public class MotorPHPayroll {
             String line;
             br.readLine(); 
             while ((line = br.readLine()) != null) {
-                String[] d = manualSplit(line);
+                String[] d = manualSplit(line);//We use the manualSplit, beacause we encounter errors on using the .split(",").
                 if (d[0].trim().equals(empId.trim())) {
                     System.out.println("\n--- Employee Details ---");
                     System.out.println("a. Employee number: " + d[0]);
