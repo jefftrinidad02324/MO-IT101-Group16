@@ -55,7 +55,7 @@ public class MotorPHPayroll {
             System.out.println("Invalid Login.");
         }
     }
-    //It reads the file line-by-line to find and display matching employee details by ID. (line 59-74)
+    //It reads the file line-by-line to find and display matching employee details by employee number. (line 59-74)
     public static void displayEmployeeInfo(String empId) {
         try (BufferedReader br = new BufferedReader(new FileReader(detailsFile))) {
             String line;
