@@ -24,6 +24,8 @@ import java.util.Scanner; // Stays active in the background, waiting for you to 
 -Reference file on the program (CSV) for employee details and attendance.
 
 static String detailsFile = "src/main/java/com/mycompany/motorphpayroll/Employee Details.csv"; // File for the employee details
+
+
 static String attendanceFile = "src/main/java/com/mycompany/motorphpayroll/Employee Attendance Record.csv"; // File for the attendance
 
 -This code checks the login to show menus for either basic information or payroll processing. (line 22-55)
