@@ -14,7 +14,11 @@ Alea Valeriano
 -File reader and scanner.
 
 import java.io.BufferedReader; // Sits on top of the FileReader to store the data and let you read it line-by-line.
+
+
 import java.io.FileReader; // Connects to the physical file on the disk.
+
+
 import java.util.Scanner; // Stays active in the background, waiting for you to tell it what the user wants to do next.
 
 -Reference file on the program (CSV) for employee details and attendance.
