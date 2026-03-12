@@ -3,8 +3,8 @@
  */
 package com.mycompany.motorphpayroll;
 
-import java.io.BufferedReader;//connects to the physical file on the disk.
-import java.io.FileReader;//sits on top of the FileReader to store the data and let you read it line-by-line.
+import java.io.BufferedReader;//Sits on top of the FileReader to store the data and let you read it line-by-line.
+import java.io.FileReader;//Connects directly with the physical file.
 import java.util.Scanner;//stays active in the background, waiting for you to tell it what the user wants to do next.
 
 
