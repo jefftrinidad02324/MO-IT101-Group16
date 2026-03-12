@@ -1,5 +1,5 @@
 # MO-IT101-Group16 | MotorPH Payroll System
-Basic presentation of employee details (employee number, employee Name & birthday) and automatic salary calculation based on the number of hours worked and basic deductions.
+Basic presentation of employee details (employee number, employee name & birthday) and automatic salary calculation based on the number of hours worked and basic deductions.
 ## Group 16 Members
 Jeff Trinidad
 
