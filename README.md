@@ -1,15 +1,15 @@
 # MO-IT101-Group16 | MotorPH Payroll System
 Basic presentation of employee details (employee number, employee name & birthday) and automatic salary calculation based on the number of hours worked and basic deductions.
 ## Group 16 Members
-Jeff Trinidad
+Jeff Trinidad (lr.jeftrinidad@mmdc.mcl.edu.ph)
 
-Patricia Kaye Red
+Patricia Kaye Red (lr.pkred@mmdc.mcl.edu.ph)
 
-Aileen Rodriguez
+Aileen Rodriguez (lr.arodriguez@mmdc.mcl.edu.ph)
 
-Alexandra Madria
+Alexandra Madria (lr.amadria@mmdc.mcl.edu.ph)
 
-Alea Valeriano
+Alea Valeriano (lr.avaleriano@mmdc.mcl.edu.ph)
 
 -File reader and scanner.
 
