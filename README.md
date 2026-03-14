@@ -19,7 +19,7 @@ import java.io.BufferedReader; // Sits on top of the FileReader to store the dat
 import java.io.FileReader; // Connects to the physical file on the disk.
 
 
-import java.util.Scanner; // Stays active in the background, waiting for you to tell it what the user wants to do next.
+import java.util.Scanner; // Allows the program to use the Scanner class, which can read user input (such as from the keyboard).
 
 -Reference file on the program (CSV) for employee details and attendance.
 
