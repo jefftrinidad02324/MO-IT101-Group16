@@ -11,6 +11,10 @@ Alexandra Madria (lr.amadria@mmdc.mcl.edu.ph)
 
 Alea Valeriano (lr.avaleriano@mmdc.mcl.edu.ph)
 
+Link for our project plan: https://docs.google.com/spreadsheets/d/1nE4RiFj4We07nnmDH4q2XIZZ0uRHJaTz/edit?usp=sharing&ouid=103961235233748739334&rtpof=true&sd=true
+
+All contribution of team members to complete this code is reflected on the project plan.
+
 -File reader and scanner.
 
 import java.io.BufferedReader; // Sits on top of the FileReader to store the data and let you read it line-by-line.
