@@ -58,6 +58,7 @@ public class MotorPHPayroll {
             System.out.println("Invalid Login.");
         }
     }
+<<<<<<< HEAD
 
     public static void displayEmployeeInfo(String employeeId) {
         try (BufferedReader reader = new BufferedReader(new FileReader(employeeDetailsFile))) {
@@ -69,6 +70,16 @@ public class MotorPHPayroll {
                 String[] employeeData = manualSplit(line);
 
                 if (employeeData[0].trim().equals(employeeId.trim())) {
+=======
+    //It reads the file line-by-line to find and display matching employee details by employee number. (line 59-74)
+    public static void displayEmployeeInfo(String empId) {
+        try (BufferedReader br = new BufferedReader(new FileReader(detailsFile))) {
+            String line;
+            br.readLine(); 
+            while ((line = br.readLine()) != null) {
+                String[] d = manualSplit(line);//We use the manualSplit, beacause we encounter errors on using the .split(",").
+                if (d[0].trim().equals(empId.trim())) {
+>>>>>>> 6f741c04d62433d52554818aa20e599c8738cad2
                     System.out.println("\n--- Employee Details ---");
                     System.out.println("Employee number: " + employeeData[0]);
                     System.out.println("Employee name: " + employeeData[2] + " " + employeeData[1]);
@@ -77,32 +88,6 @@ public class MotorPHPayroll {
                 }
             }
 
-            System.out.println("Employee number does not exist.");
-
-        } catch (Exception e) {
-            System.out.println("Error reading file.");
-        }
-    }
-
-    public static void calculatePayroll(String employeeId) {
-        try {
-            String employeeName = "";
-            double basicSalary = 0;
-            double hourlyRate = 0;
-            boolean employeeFound = false;
-
-            BufferedReader employeeReader = new BufferedReader(new FileReader(employeeDetailsFile));
-            String line;
-            employeeReader.readLine();
-
-            while ((line = employeeReader.readLine()) != null) {
-                String[] employeeData = manualSplit(line);
-
-                if (employeeData[0].trim().equals(employeeId.trim())) {
-                    employeeName = employeeData[2] + " " + employeeData[1];
-                    basicSalary = Double.parseDouble(employeeData[13].replace("\"", "").replace(",", ""));
-                    hourlyRate = Double.parseDouble(employeeData[18]);
-                    employeeFound = true;
                     break;
                 }
             }
@@ -194,10 +179,44 @@ public class MotorPHPayroll {
         // Deduct lunch
         workedHours -= 1;
 
-        return new double[]{
-                Math.max(0, workedHours),
-                lateHours
-        };
+<<<<<<< HEAD
+            System.out.println("Employee number does not exist.");
+
+        } catch (Exception e) {
+            System.out.println("Error reading file.");
+        }
+    }
+
+    public static void calculatePayroll(String employeeId) {
+        try {
+            String employeeName = "";
+            double basicSalary = 0;
+            double hourlyRate = 0;
+            boolean employeeFound = false;
+
+            BufferedReader employeeReader = new BufferedReader(new FileReader(employeeDetailsFile));
+            String line;
+            employeeReader.readLine();
+
+            while ((line = employeeReader.readLine()) != null) {
+                String[] employeeData = manualSplit(line);
+
+                if (employeeData[0].trim().equals(employeeId.trim())) {
+                    employeeName = employeeData[2] + " " + employeeData[1];
+                    basicSalary = Double.parseDouble(employeeData[13].replace("\"", "").replace(",", ""));
+                    hourlyRate = Double.parseDouble(employeeData[18]);
+                    employeeFound = true;
+=======
+            BufferedReader br1 = new BufferedReader(new FileReader(detailsFile));
+            String line = br1.readLine();
+            while ((line = br1.readLine()) != null) {
+                String[] d = manualSplit(line);//We use the manualSplit, beacause we encounter errors on using the .split(",").
+                if (d[0].trim().equals(empId.trim())) {
+                    name = d[2] + " " + d[1];
+                    basic = Double.parseDouble(d[13].replace("\"", "").replace(",", ""));
+                    rate = Double.parseDouble(d[18]);
+                    found = true;
+>>>>>>> 6f741c04d62433d52554818aa20e599c8738cad2
     }
 
     public static void printFinalReport(int month, String employeeName, String employeeId,
@@ -321,3 +340,14 @@ public class MotorPHPayroll {
         return parsedValues;
     }
 }
+<<<<<<< HEAD
+        return new double[]{
+                Math.max(0, workedHours),
+                lateHours
+        };
+=======
+        System.out.println("\nPAYROLL FOR " + monthName + " | " + name + " (" + id + ")");
+        System.out.println("[1ST CUT-OFF] Total Hours: " + h1 + " | Late: " + l1 + " | Net payout: " + (netHours1 * rate));
+        System.out.println("[2ND CUT-OFF] Total Hours: " + h2 + " | Late: " + l2 + " | Deductions: SSS=" + sss + ", Phil-health=" + ph + ", Pag-ibig=" + pi + ", Tax=" + tax);
+        System.out.println("  Net Payout: " + ((netHours2 * rate) - (sss + ph + pi + tax)));
+>>>>>>> 6f741c04d62433d52554818aa20e599c8738cad2
