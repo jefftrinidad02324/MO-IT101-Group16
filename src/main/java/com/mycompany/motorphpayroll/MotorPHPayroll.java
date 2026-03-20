@@ -2,18 +2,29 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 package com.mycompany.motorphpayroll;
-
+//================= IMPORTS =================
+//// Import required classes for file handling, collections, and user input
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*================= PROGRAM OVERVIEW =================
+ This system simulates a payroll system:
+ - Login system (Employee / Payroll Staff)
+ - View employee info
+ - Process payroll using attendance and salary data*/
+
+
 public class MotorPHPayroll {
 
+    // ================= FILE PATH CONFIGURATION =================
     // File paths for employee details and attendance records
     static String employeeDetailsFile = "src/main/java/com/mycompany/motorphpayroll/Employee Details.csv";
     static String attendanceRecordFile = "src/main/java/com/mycompany/motorphpayroll/Employee Attendance Record.csv";
 
+    // ================= MAIN METHOD =================
+    // Entry point of the program
     public static void main(String[] args) {
         // Scanner is used to get input from the user
         Scanner scanner = new Scanner(System.in);
@@ -25,6 +36,7 @@ public class MotorPHPayroll {
         scanner.close();
     }
 
+   // ================= LOGIN & MENU =================
     public static void handleLogin(Scanner scanner) {
         System.out.println("--- MotorPH Login ---");
 
@@ -80,7 +92,9 @@ public class MotorPHPayroll {
             System.out.println("Invalid Login.");
         }
     }
-
+     // ================= EMPLOYEE INFORMATION =================
+    // Displays employee details from CSV
+    
     public static void displayEmployeeInfo(String employeeId) {
 
         // Try-with-resources automatically closes reader after use
@@ -119,6 +133,9 @@ public class MotorPHPayroll {
         }
     }
 
+    // ================= PAYROLL PROCESSING =================
+    // Calculates payroll using employee + attendance data
+    
     public static void calculatePayroll(String employeeId) {
         try {
             // Variables to store employee information
@@ -160,7 +177,9 @@ public class MotorPHPayroll {
                 System.out.println("Employee not found.");
                 return;
             }
+            
 
+            // ================= ATTENDANCE LOADING =================
             // Read attendance once and store in memory (efficient)
             ArrayList<String[]> attendanceRecords = new ArrayList<>();
             BufferedReader attendanceReader = new BufferedReader(new FileReader(attendanceRecordFile));
@@ -172,6 +191,7 @@ public class MotorPHPayroll {
             }
             attendanceReader.close();
 
+            // ================= MONTHLY PROCESSING =================
             // Loop through months (June to December)
             for (int month = 6; month <= 12; month++) {
 
@@ -181,7 +201,7 @@ public class MotorPHPayroll {
                 double firstCutoffLate = 0;
                 double secondCutoffLate = 0;
 
-                // Process each attendance record
+                // Process each attendance record.
                 for (String[] attendanceData : attendanceRecords) {
 
                     // Skip if not matching employee ID
@@ -227,6 +247,8 @@ public class MotorPHPayroll {
         }
     }
 
+    // ================= DAILY WORK CALCULATION =================
+    // Computes hours worked and late penalties
     public static double[] computeDailyWork(String timeIn, String timeOut) {
 
         // Split time into hours and minutes
@@ -264,6 +286,9 @@ public class MotorPHPayroll {
         };
     }
 
+    
+    // ================= REPORT OUTPUT =================
+    // Displays payroll results
     public static void printFinalReport(int month, String employeeName, String employeeId,
                                        double firstCutoffHours, double secondCutoffHours,
                                        double firstCutoffLate, double secondCutoffLate,
@@ -327,6 +352,7 @@ public class MotorPHPayroll {
         System.out.println("========================================");
     }
 
+    // ================= HELPER METHODS =================
     // Converts month number to readable name
     public static String getMonthName(int month) {
         switch (month) {
@@ -379,6 +405,9 @@ public class MotorPHPayroll {
         else if (income <= 666667) return 40833.33 + (income - 166667) * 0.32;
         else return 200833.33 + (income - 666667) * 0.35;
     }
+
+    // ================= CSV PARSING =================
+    // Handles splitting CSV values correctly
 
     public static String[] manualSplit(String line) {
 
