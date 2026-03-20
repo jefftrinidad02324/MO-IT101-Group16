@@ -13,6 +13,8 @@ Alea Valeriano (lr.avaleriano@mmdc.mcl.edu.ph)
 
 Link for our project plan: https://docs.google.com/spreadsheets/d/1nE4RiFj4We07nnmDH4q2XIZZ0uRHJaTz/edit?usp=sharing&ouid=103961235233748739334&rtpof=true&sd=true
 
+QA Testing from Group 15: https://docs.google.com/spreadsheets/d/1RqlT_oVx8UQcUSg5v8HRP11mTDIvhDW3nFnequdVtys/edit?usp=sharing
+
 All contribution of team members to complete this code is reflected on the project plan.
 
 
