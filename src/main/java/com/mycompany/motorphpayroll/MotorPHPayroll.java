@@ -1,448 +1,246 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 package com.mycompany.motorphpayroll;
-//================= IMPORTS =================
-//// Import required classes for file handling, collections, and user input
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Scanner;
 
-/*================= PROGRAM OVERVIEW =================
- This system simulates a payroll system:
- - Login system (Employee / Payroll Staff)
- - View employee info
- - Process payroll using attendance and salary data*/
-
+import javax.swing.*;
+import java.awt.*;
 
 public class MotorPHPayroll {
 
-    // ================= FILE PATH CONFIGURATION =================
-    // File paths for employee details and attendance records
-    static String employeeDetailsFile = "src/main/java/com/mycompany/motorphpayroll/Employee Details.csv";
-    static String attendanceRecordFile = "src/main/java/com/mycompany/motorphpayroll/Employee Attendance Record.csv";
+    static JFrame frame;
+    static CardLayout cardLayout;
+    static JPanel mainPanel;
 
-    // ================= MAIN METHOD =================
-    // Entry point of the program
+    // Login
+    static JTextField usernameField;
+    static JPasswordField passwordField;
+
+    // Employee
+    static JTextField employeeNumberField;
+    static JTextField employeeNameField;
+    static JTextArea employeeOutputArea;
+
+    // Payroll
+    static JTextField payrollEmployeeNumberField;
+    static JTextField payrollEmployeeNameField;
+    static JTextArea payrollOutputArea;
+
     public static void main(String[] args) {
-        // Scanner is used to get input from the user
-        Scanner scanner = new Scanner(System.in);
-
-        // Start login process
-        handleLogin(scanner);
-
-        // Close scanner after use to avoid memory leaks
-        scanner.close();
+        SwingUtilities.invokeLater(MotorPHPayroll::createUI);
     }
 
-   // ================= LOGIN & MENU =================
-    public static void handleLogin(Scanner scanner) {
-        System.out.println("--- MotorPH Login ---");
+    // ================= MAIN UI =================
+    public static void createUI() {
 
-        // Ask user for login credentials
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
+        frame = new JFrame("MotorPH System");
+        frame.setSize(900, 650);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
 
-        // Check if login is for regular employee
-        if (username.equals("employee") && password.equals("12345")) {
+        mainPanel.add(loginPanel(), "LOGIN");
+        mainPanel.add(employeePanel(), "EMPLOYEE");
+        mainPanel.add(payrollPanel(), "PAYROLL");
 
-            System.out.println("\n1. Enter your employee number\n2. Exit program");
+        // ================= OUTER PADDING WRAPPER =================
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        wrapper.add(mainPanel, BorderLayout.CENTER);
 
-            // Get user choice
-            int choice = scanner.nextInt();
+        frame.add(wrapper);
+        frame.setVisible(true);
 
-            if (choice == 1) {
-                System.out.print("Enter ID: ");
-
-                // Display employee info based on entered ID
-                displayEmployeeInfo(scanner.next());
-            }
-
-        // Check if login is for payroll staff
-        } else if (username.equals("payroll staff") && password.equals("12345")) {
-
-            System.out.println("\n1. Process Payroll\n2. Exit");
-
-            int menuChoice = scanner.nextInt();
-
-            if (menuChoice == 1) {
-
-                System.out.println("\n1. Process One Employee\n2. Process All Employees");
-                int subMenuChoice = scanner.nextInt();
-
-                // Process payroll for a single employee
-                if (subMenuChoice == 1) {
-                    System.out.print("Enter Employee ID: ");
-                    calculatePayroll(scanner.next());
-
-                // Process payroll for all employees (looping through IDs)
-                } else if (subMenuChoice == 2) {
-                    for (int employeeId = 10001; employeeId <= 10034; employeeId++) {
-                        calculatePayroll(String.valueOf(employeeId));
-                    }
-                }
-            }
-
-        } else {
-            // Invalid login message
-            System.out.println("Invalid Login.");
-        }
-    }
-     // ================= EMPLOYEE INFORMATION =================
-    // Displays employee details from CSV
-    
-    public static void displayEmployeeInfo(String employeeId) {
-
-        // Try-with-resources automatically closes reader after use
-        try (BufferedReader reader = new BufferedReader(new FileReader(employeeDetailsFile))) {
-
-            String line;
-
-            // Skip header row
-            reader.readLine();
-
-            // Read file line by line
-            while ((line = reader.readLine()) != null) {
-
-                // Split CSV line into array (custom method to handle quotes properly)
-                String[] employeeData = manualSplit(line);
-
-                // Compare employee ID
-                if (employeeData[0].trim().equals(employeeId.trim())) {
-
-                    System.out.println("\n--- Employee Details ---");
-                    System.out.println("Employee number: " + employeeData[0]);
-
-                    // Combine first name and last name
-                    System.out.println("Employee name: " + employeeData[2] + " " + employeeData[1]);
-
-                    System.out.println("Birthday: " + employeeData[3]);
-                    return; // Stop once found
-                }
-            }
-
-            // If not found
-            System.out.println("Employee number does not exist.");
-
-        } catch (Exception e) {
-            System.out.println("Error reading file.");
-        }
+        cardLayout.show(mainPanel, "LOGIN");
     }
 
-    // ================= PAYROLL PROCESSING =================
-    // Calculates payroll using employee + attendance data
-    
-    public static void calculatePayroll(String employeeId) {
-        try {
-            // Variables to store employee information
-            String employeeName = "";
-            double basicSalary = 0;
-            double hourlyRate = 0;
-            boolean employeeFound = false;
+    // ================= LOGIN =================
+    public static JPanel loginPanel() {
 
-            // Read employee details file
-            BufferedReader employeeReader = new BufferedReader(new FileReader(employeeDetailsFile));
-            String line;
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
-            // Skip header
-            employeeReader.readLine();
+        gbc.insets = new Insets(8, 10, 8, 10);
 
-            while ((line = employeeReader.readLine()) != null) {
+        usernameField = new JTextField(16);
+        passwordField = new JPasswordField(16);
 
-                String[] employeeData = manualSplit(line);
+        JButton login = new JButton("LOGIN");
+        JButton exit = new JButton("EXIT PROGRAM");
 
-                // Check if employee ID matches
-                if (employeeData[0].trim().equals(employeeId.trim())) {
+        // ================= TITLE =================
+        JLabel title = new JLabel("MotorPH Payroll System");
+        title.setFont(new Font("Arial", Font.BOLD, 20));
 
-                    // Extract needed data
-                    employeeName = employeeData[2] + " " + employeeData[1];
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(title, gbc);
 
-                    // Remove quotes and commas before converting to double
-                    basicSalary = Double.parseDouble(employeeData[13].replace("\"", "").replace(",", ""));
+        gbc.gridwidth = 1;
 
-                    hourlyRate = Double.parseDouble(employeeData[18]);
+        // Username
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(new JLabel("Username:"), gbc);
 
-                    employeeFound = true;
-                    break;
-                }
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(usernameField, gbc);
+
+        // Password
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(new JLabel("Password:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(passwordField, gbc);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        buttonPanel.add(login);
+        buttonPanel.add(exit);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(buttonPanel, gbc);
+
+        login.addActionListener(e -> {
+
+            String u = usernameField.getText();
+            String p = new String(passwordField.getPassword());
+
+            if (u.equals("employee") && p.equals("12345")) {
+                cardLayout.show(mainPanel, "EMPLOYEE");
+            } else if (u.equals("payroll_staff") && p.equals("12345")) {
+                cardLayout.show(mainPanel, "PAYROLL");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Invalid login");
             }
-            employeeReader.close();
+        });
 
-            // If employee not found, stop process
-            if (!employeeFound) {
-                System.out.println("Employee not found.");
+        exit.addActionListener(e -> System.exit(0));
+
+        return panel;
+    }
+
+    // ================= EMPLOYEE =================
+    public static JPanel employeePanel() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+
+        JPanel top = new JPanel(new GridLayout(3, 2, 10, 10));
+
+        employeeNumberField = new JTextField();
+        employeeNameField = new JTextField();
+        employeeNameField.setEditable(false);
+
+        JButton view = new JButton("View");
+        JButton back = new JButton("Back");
+        JButton exit = new JButton("Exit Program");
+
+        top.add(new JLabel("Employee No"));
+        top.add(employeeNumberField);
+        top.add(new JLabel("Name"));
+        top.add(employeeNameField);
+        top.add(view);
+        top.add(back);
+
+        employeeOutputArea = new JTextArea();
+        employeeOutputArea.setEditable(false);
+
+        JScrollPane scroll = new JScrollPane(employeeOutputArea);
+
+        JPanel bottom = new JPanel();
+        bottom.add(exit);
+
+        view.addActionListener(e -> {
+
+            String id = employeeNumberField.getText().trim();
+
+            if (id.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Enter Employee Number");
                 return;
             }
-            
 
-            // ================= ATTENDANCE LOADING =================
-            // Read attendance once and store in memory (efficient)
-            ArrayList<String[]> attendanceRecords = new ArrayList<>();
-            BufferedReader attendanceReader = new BufferedReader(new FileReader(attendanceRecordFile));
+            EmployeeService.displayEmployee(
+                    id,
+                    employeeNameField,
+                    employeeOutputArea
+            );
+        });
 
-            attendanceReader.readLine(); // skip header
+        back.addActionListener(e -> cardLayout.show(mainPanel, "LOGIN"));
+        exit.addActionListener(e -> System.exit(0));
 
-            while ((line = attendanceReader.readLine()) != null) {
-                attendanceRecords.add(line.split(",")); // simple split for attendance
-            }
-            attendanceReader.close();
+        panel.add(top, BorderLayout.NORTH);
+        panel.add(scroll, BorderLayout.CENTER);
+        panel.add(bottom, BorderLayout.SOUTH);
 
-            // ================= MONTHLY PROCESSING =================
-            // Loop through months (June to December)
-            for (int month = 6; month <= 12; month++) {
+        return panel;
+    }
 
-                // Initialize counters for each cutoff
-                double firstCutoffHours = 0;
-                double secondCutoffHours = 0;
-                double firstCutoffLate = 0;
-                double secondCutoffLate = 0;
+    // ================= PAYROLL =================
+    public static JPanel payrollPanel() {
 
-                // Process each attendance record.
-                for (String[] attendanceData : attendanceRecords) {
+        JPanel panel = new JPanel(new BorderLayout());
 
-                    // Skip if not matching employee ID
-                    if (!attendanceData[0].trim().equals(employeeId.trim())) continue;
+        JPanel top = new JPanel(new GridLayout(4, 2, 10, 10));
 
-                    // Extract date parts (month/day/year)
-                    String[] dateParts = attendanceData[3].split("/");
-                    int monthNumber = Integer.parseInt(dateParts[0]);
-                    int dayNumber = Integer.parseInt(dateParts[1]);
+        payrollEmployeeNumberField = new JTextField();
+        payrollEmployeeNameField = new JTextField();
+        payrollEmployeeNameField.setEditable(false);
 
-                    // Only process records for current month
-                    if (monthNumber == month) {
+        JButton one = new JButton("Process One");
+        JButton all = new JButton("Process All");
+        JButton back = new JButton("Back");
+        JButton exit = new JButton("Exit Program");
 
-                        // Compute daily worked hours and late hours
-                        double[] workData = computeDailyWork(attendanceData[4], attendanceData[5]);
+        top.add(new JLabel("Employee No"));
+        top.add(payrollEmployeeNumberField);
+        top.add(new JLabel("Name"));
+        top.add(payrollEmployeeNameField);
+        top.add(one);
+        top.add(all);
+        top.add(back);
+        top.add(exit);
 
-                        double dailyWorkedHours = workData[0];
-                        double dailyLateHours = workData[1];
+        payrollOutputArea = new JTextArea();
+        payrollOutputArea.setEditable(false);
 
-                        // Separate into first cutoff (1–15) and second cutoff (16–end)
-                        if (dayNumber <= 15) {
-                            firstCutoffHours += dailyWorkedHours;
-                            firstCutoffLate += dailyLateHours;
-                        } else {
-                            secondCutoffHours += dailyWorkedHours;
-                            secondCutoffLate += dailyLateHours;
-                        }
-                    }
-                }
+        JScrollPane scroll = new JScrollPane(payrollOutputArea);
 
-                // Only print report if there is data
-                if (firstCutoffHours > 0 || secondCutoffHours > 0) {
+        one.addActionListener(e -> {
 
-                    printFinalReport(month, employeeName, employeeId,
-                            firstCutoffHours, secondCutoffHours,
-                            firstCutoffLate, secondCutoffLate,
-                            hourlyRate, basicSalary);
-                }
+            String id = payrollEmployeeNumberField.getText().trim();
+
+            if (id.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Enter Employee Number");
+                return;
             }
 
-        } catch (Exception e) {
-            System.out.println("Error processing payroll.");
-        }
-    }
+            PayrollService.processOne(
+                    id,
+                    payrollEmployeeNameField,
+                    payrollOutputArea
+            );
+        });
 
-    // ================= DAILY WORK CALCULATION =================
-    // Computes hours worked and late penalties
-    public static double[] computeDailyWork(String timeIn, String timeOut) {
+        all.addActionListener(e ->
+                PayrollService.processAll(payrollOutputArea)
+        );
 
-        // Split time into hours and minutes
-        String[] timeInParts = timeIn.split(":");
-        String[] timeOutParts = timeOut.split(":");
+        back.addActionListener(e -> cardLayout.show(mainPanel, "LOGIN"));
+        exit.addActionListener(e -> System.exit(0));
 
-        // Convert time into decimal format (e.g., 8:30 → 8.5)
-        double startTime = Integer.parseInt(timeInParts[0]) + Integer.parseInt(timeInParts[1]) / 60.0;
-        double endTime = Integer.parseInt(timeOutParts[0]) + Integer.parseInt(timeOutParts[1]) / 60.0;
+        panel.add(top, BorderLayout.NORTH);
+        panel.add(scroll, BorderLayout.CENTER);
 
-        // Clamp time to official working hours (8AM–5PM)
-        startTime = Math.max(8.0, startTime);
-        endTime = Math.min(17.0, endTime);
-
-        // Compute late hours
-        double lateHours = 0;
-
-        int hour = Integer.parseInt(timeInParts[0]);
-        int minute = Integer.parseInt(timeInParts[1]);
-
-        // If employee arrives after 8:10 AM → considered late
-        if (hour > 8 || (hour == 8 && minute >= 11)) {
-            lateHours = 0.5; // fixed deduction
-        }
-
-        // Calculate total worked hours
-        double workedHours = endTime - startTime;
-
-        // Deduct 1 hour lunch break
-        workedHours -= 1;
-
-        return new double[]{
-                Math.max(0, workedHours), // prevent negative hours
-                lateHours
-        };
-    }
-
-    
-    // ================= REPORT OUTPUT =================
-    // Displays payroll results
-    public static void printFinalReport(int month, String employeeName, String employeeId,
-                                       double firstCutoffHours, double secondCutoffHours,
-                                       double firstCutoffLate, double secondCutoffLate,
-                                       double hourlyRate, double basicSalary) {
-
-        // Convert month number to name
-        String monthName = getMonthName(month);
-
-        // Compute salary per cutoff
-        double firstCutoffSalary = firstCutoffHours * hourlyRate;
-        double secondCutoffSalary = secondCutoffHours * hourlyRate;
-
-        // Total salary before deductions
-        double totalGrossSalary = firstCutoffSalary + secondCutoffSalary;
-
-        // Government contributions
-        double sssContribution = getSSS(basicSalary);
-        double philHealthContribution = (basicSalary * 0.03) / 2;
-
-        // Conditional computation for Pag-IBIG
-        double pagIbigContribution = (basicSalary <= 1500)
-                ? basicSalary * 0.01
-                : basicSalary * 0.02;
-
-        // Compute taxable income
-        double taxableIncome = totalGrossSalary - (sssContribution + philHealthContribution + pagIbigContribution);
-
-        // Compute tax
-        double withholdingTax = getTax(taxableIncome);
-
-        // Total deductions
-        double totalDeductions = sssContribution + philHealthContribution + pagIbigContribution + withholdingTax;
-
-        // Net salary for second cutoff
-        double netSalarySecondCutoff = secondCutoffSalary - totalDeductions;
-
-        // Display report
-        System.out.println("\n========================================");
-        System.out.println("Employee number: " + employeeId);
-        System.out.println("Employee name: " + employeeName);
-
-        System.out.println("\nCutoff date: 1 - 15 (" + monthName + ")");
-        System.out.println("Total hours worked: " + firstCutoffHours);
-        System.out.println("Late hours: " + firstCutoffLate);
-        System.out.println("Gross salary: " + firstCutoffSalary);
-        System.out.println("Net salary: " + firstCutoffSalary);
-
-        System.out.println("\nCutoff date: 16 - End (" + monthName + ")");
-        System.out.println("Total hours worked: " + secondCutoffHours);
-        System.out.println("Late hours: " + secondCutoffLate);
-        System.out.println("Gross salary: " + secondCutoffSalary);
-
-        System.out.println("SSS: " + sssContribution);
-        System.out.println("Phil-health: " + philHealthContribution);
-        System.out.println("Pag-ibig: " + pagIbigContribution);
-        System.out.println("Tax: " + withholdingTax);
-
-        System.out.println("Total deductions: " + totalDeductions);
-        System.out.println("Net salary: " + netSalarySecondCutoff);
-
-        System.out.println("========================================");
-    }
-
-    // ================= HELPER METHODS =================
-    // Converts month number to readable name
-    public static String getMonthName(int month) {
-        switch (month) {
-            case 6: return "JUNE";
-            case 7: return "JULY";
-            case 8: return "AUGUST";
-            case 9: return "SEPTEMBER";
-            case 10: return "OCTOBER";
-            case 11: return "NOVEMBER";
-            case 12: return "DECEMBER";
-        }
-        return "";
-    }
-
-    public static double getSSS(double salary) {
-
-        // Table of salary ranges and corresponding SSS contributions
-        double[][] table = {
-                {0, 3249, 135}, {3250, 3750, 157.5}, {3751, 4250, 180},
-                {4251, 4750, 202.5}, {4751, 5250, 225}, {5251, 5750, 247.5},
-                {5751, 6250, 270}, {6251, 6750, 292.5}, {6751, 7250, 315},
-                {7251, 7750, 337.5}, {7751, 8250, 360}, {8251, 8750, 382.5},
-                {8751, 9250, 405}, {9251, 9750, 427.5}, {9751, 10250, 450},
-                {10251, 10750, 472.5}, {10751, 11250, 495}, {11251, 11750, 517.5},
-                {11751, 12250, 540}, {12251, 12750, 562.5}, {12751, 13250, 585},
-                {13251, 13750, 607.5}, {13751, 14250, 630}, {14251, 14750, 652.5},
-                {14751, 15250, 675}, {15251, 15750, 697.5}, {15751, 16250, 720},
-                {16251, 16750, 742.5}, {16751, 17250, 765}, {17251, 17750, 787.5},
-                {17751, 18250, 810}, {18251, 18750, 832.5}, {18751, 19250, 855},
-                {19251, 19750, 877.5}, {19751, 20250, 900}, {20251, 20750, 922.5},
-                {20751, 21250, 945}, {21251, 21750, 967.5}, {21751, 22250, 990},
-                {22251, 22750, 1012.5}, {22751, 23250, 1035}, {23251, 23750, 1057.5},
-                {23751, 24250, 1080}, {24251, 24750, 1102.5}, {24751, Double.MAX_VALUE, 1125}
-        };
-
-        // Find matching salary range
-        for (double[] row : table) {
-            if (salary >= row[0] && salary <= row[1]) return row[2];
-        }
-        return 0;
-    }
-
-    public static double getTax(double income) {
-
-        // Apply tax brackets
-        if (income <= 20832) return 0;
-        else if (income <= 33333) return (income - 20833) * 0.20;
-        else if (income <= 66667) return 2500 + (income - 33333) * 0.25;
-        else if (income <= 166667) return 10833 + (income - 66667) * 0.30;
-        else if (income <= 666667) return 40833.33 + (income - 166667) * 0.32;
-        else return 200833.33 + (income - 666667) * 0.35;
-    }
-
-    // ================= CSV PARSING =================
-    // Handles splitting CSV values correctly
-
-    public static String[] manualSplit(String line) {
-
-        // Array to store parsed CSV values
-        String[] parsedValues = new String[19];
-
-        String currentValue = "";
-        int columnIndex = 0;
-
-        // Tracks if we are inside quotation marks
-        boolean insideQuotes = false;
-
-        // Loop through each character in the line
-        for (int i = 0; i < line.length(); i++) {
-
-            char currentChar = line.charAt(i);
-
-            // Toggle quote state
-            if (currentChar == '\"') {
-                insideQuotes = !insideQuotes;
-
-            // If comma AND not inside quotes → split column
-            } else if (currentChar == ',' && !insideQuotes) {
-                parsedValues[columnIndex++] = currentValue;
-                currentValue = "";
-
-            } else {
-                // Build the current value
-                currentValue += currentChar;
-            }
-        }
-
-        // Add last value
-        parsedValues[columnIndex] = currentValue;
-
-        return parsedValues;
+        return panel;
     }
 }

@@ -1,1 +1,4 @@
+com\mycompany\motorphpayroll\Utility.class
 com\mycompany\motorphpayroll\MotorPHPayroll.class
+com\mycompany\motorphpayroll\PayrollService.class
+com\mycompany\motorphpayroll\EmployeeService.class
